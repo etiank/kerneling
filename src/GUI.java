@@ -54,6 +54,7 @@ public class GUI implements ActionListener {
         JLabel label = new JLabel("Number");
         JButton button = new JButton("0");
         button.addActionListener(this);
+
         JFileChooser jf = new JFileChooser("c:");
         jf.showSaveDialog(null);
 //      ─────────────────────────────────────────────────────────┘
