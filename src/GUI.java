@@ -43,6 +43,7 @@ public class GUI implements ActionListener {
 //      ───────────────────────────────────────────────────────────────┘
 
 //      ─────────────────────────JPannelli──────────────────────────────────────────────────┐
+        //GridBAgLayout
         JPanel panel1 = new JPanel();
         //panel1.setSize(350,250);
         JPanel panel2 = new JPanel();
@@ -107,10 +108,12 @@ public class GUI implements ActionListener {
 //      ───adding to panel───────────────────────────────────────┐
 
         panel1.add(p1, BorderLayout.NORTH);
-        panel1.add(customKernel, BorderLayout.CENTER);
+        panel1.add(customKernel, BorderLayout.SOUTH);
+
+        panel2.add(selectImage, BorderLayout.SOUTH);
         panel2.add(p2, BorderLayout.NORTH);
-        panel2.add(selectImage, BorderLayout.CENTER);
-        panel2.add(imagePreview);
+        panel2.add(imagePreview, BorderLayout.SOUTH);
+
         panel3.add(p3, BorderLayout.NORTH);
         panel3.add(runMode, BorderLayout.WEST);
         panel3.add(runButton, BorderLayout.EAST);
