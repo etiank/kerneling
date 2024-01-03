@@ -44,19 +44,21 @@ public class GUI implements ActionListener {
 
 //      ─────────────────────────JPannelli──────────────────────────────────────────────────┐
         JPanel panel1 = new JPanel();
+        //panel1.setSize(350,250);
         JPanel panel2 = new JPanel();
+        //panel2.setSize(350,250);
         JPanel panel3 = new JPanel();
+        //panel3.setSize(700,50);
         JLabel p1 = new JLabel("Select kernel: ");
         JLabel p2 = new JLabel("Select image: ");
         JLabel p3 = new JLabel("Select run mode: ");
         //panel1.setSize(400, 300);
         //panel1.setBorder(createEmptyBorder(30, 30, 10, 30));
 
-        //panel.setLayout(new GridLayout(0,1 ));
-        //panel.setBackground(Color.WHITE);
 //      ────────────────────────────────────────────────────────────────────────────────────┘
 
 //      ───────────────────🔘──────────────────────────────────────────────┐
+
         JButton customKernel = new JButton("Select ");
         JButton selectImage = new JButton("Select image");
         JButton runButton = new JButton("Run");
@@ -80,14 +82,30 @@ public class GUI implements ActionListener {
         // BUTTON ACTIONLISTENERS
         selectImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new java.awt.FileDialog((java.awt.Frame) null).setVisible(true);
-            }
+                FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image");
+
+
+                // Show the file dialog
+                fileDialog.setVisible(true);
+
+                // Get the selected directory and file name
+                String directory = fileDialog.getDirectory();
+                String fileName = fileDialog.getFile();
+
+                // If a file was selected
+                if (fileName != null) {
+                    // Process the selected file
+                    System.out.println("Selected file: " + directory + fileName);
+
+
+            }}
         });
 
 
 //      ───────────────────────────────────────────────────────────────────┘
 
 //      ───adding to panel───────────────────────────────────────┐
+
         panel1.add(p1, BorderLayout.NORTH);
         panel1.add(customKernel, BorderLayout.CENTER);
         panel2.add(p2, BorderLayout.NORTH);
@@ -99,6 +117,17 @@ public class GUI implements ActionListener {
 
 
         //frame.setLayout(new GridLayout(2,1));
+
+        /*GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.anchor = GridBagConstraints.NORTH;
+        panel1.add(info, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        panel1.add(customKernel, constraints);
+*/
 
         frame.add(panel1, BorderLayout.WEST);
         frame.add(panel2, BorderLayout.EAST);
