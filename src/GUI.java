@@ -20,8 +20,11 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 /*
 ┌────────────────────────────TO-DO──────────────────────────────────────────────┐
 │ - una class per la window (GUI)                                               │
-│ - una class per il programma                                                  │
-│ - button linked to action listener that opens Java swing file JFile chooser   │
+│ - una class per il programma sequential                                       │
+│ - una class per il programma parallel                                         │
+│ - una class per il programma distributed                                      │
+│ - start actually working on convolution algorithm                             │
+│ - implement image preview                                                     │
 └────────────────────────────TO-DO──────────────────────────────────────────────┘
 */
 
@@ -29,6 +32,11 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 //====================================================================================================================┐
 
 public class GUI implements ActionListener {
+
+    SeqKerneling seq = new SeqKerneling();
+    ParKerneling par = new ParKerneling();
+    DistrKerneling distr = new DistrKerneling();
+    private static String selectedOption;
 
     public GUI(){ // creating the very elegant sqaure of gaze
 
@@ -65,9 +73,9 @@ public class GUI implements ActionListener {
         JButton runButton = new JButton("Run");
         // DROPDOWN MENU
         JComboBox<String> runMode = new JComboBox<>(
-                new String[]{"Sequential", "Parallel", "Distributed"});
+                new String[]{" ","Sequential", "Parallel", "Distributed"});
         runMode.addActionListener((e) -> {
-            String selectedOption = (String) runMode.getSelectedItem();
+            GUI.selectedOption = (String) runMode.getSelectedItem();
             System.out.println("Selected option: " + selectedOption);
         });
 
@@ -85,7 +93,6 @@ public class GUI implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image");
 
-
                 // Show the file dialog
                 fileDialog.setVisible(true);
 
@@ -102,10 +109,34 @@ public class GUI implements ActionListener {
             }}
         });
 
+        runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                switch(selectedOption) {
+                    case "Sequential":
+                        seq.test();
+                        break;
+                    case "Parallel":
+                        par.Unimplemented();
+                        break;
+                    case "Distributed":
+                        distr.Unimplemented();
+                        break;
+                    default:
+                        System.out.println("Run mode not selected.");
+                }
+
+
+            }
+        });
+
+
+
 
 //      ───────────────────────────────────────────────────────────────────┘
 
-//      ───adding to panel───────────────────────────────────────┐
+//      ───Panel shenanigans 😒──────────────────────────────────┐
 
         panel1.add(p1, BorderLayout.NORTH);
         panel1.add(customKernel, BorderLayout.SOUTH);
@@ -137,7 +168,9 @@ public class GUI implements ActionListener {
         frame.add(panel3, BorderLayout.SOUTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.pack();
+        frame.setLocation(400,260);
         frame.setVisible(true);
+        UIManager.put("swing.boldMetal", Boolean.FALSE);
 //      ─────────────────────────────────────────────────────────┘
     }
 
