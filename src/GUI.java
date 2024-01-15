@@ -33,14 +33,22 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class GUI implements ActionListener {
 
-    SeqKerneling seq = new SeqKerneling();
+
     ParKerneling par = new ParKerneling();
     DistrKerneling distr = new DistrKerneling();
-    private static String selectedOption;
+    SeqKerneling seq = new SeqKerneling();
+    private static String selectedOption = "";
+    static String directory = "\\kerneling\\";
+    static String fileName = "cat2.jpeg";
 
     public GUI(){ // creating the very elegant sqaure of gaze
 
-
+        System.out.println("┌──────────────────────────────────┐\n" +
+                "│ Kernel image processing program. │\n" +
+                "└──────────────────────────────────┘\n" +
+                "> You may select an image and a \n" +
+                "kernel to be used, if not, \n" +
+                "default values will be used.\n");
 
 //      ───adding some silliness───────────────────────────────────────┐
         // le magestic, le one and only, J. Frame Kernely
@@ -66,11 +74,12 @@ public class GUI implements ActionListener {
 
 //      ────────────────────────────────────────────────────────────────────────────────────┘
 
-//      ───────────────────🔘──────────────────────────────────────────────┐
+//      ───────────────────🔘───────────────────────────────────────────────┐
 
         JButton customKernel = new JButton("Select ");
         JButton selectImage = new JButton("Select image");
         JButton runButton = new JButton("Run");
+
         // DROPDOWN MENU
         JComboBox<String> runMode = new JComboBox<>(
                 new String[]{" ","Sequential", "Parallel", "Distributed"});
@@ -78,50 +87,45 @@ public class GUI implements ActionListener {
             GUI.selectedOption = (String) runMode.getSelectedItem();
             System.out.println("Selected option: " + selectedOption);
         });
+//      ────────────────────────────────────────────────────────────────────┘
 
-        //  IMAGE PREVIEW
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new File("cat2.jpeg"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        JLabel imagePreview = new JLabel(new ImageIcon(image));
 
-        // BUTTON ACTIONLISTENERS
+        // BUTTON ACTIONLISTENERS ───────────────────────────────────────────────────────────┐
+
+            // IMAGE SELECTOR
+
         selectImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image");
 
-                // Show the file dialog
                 fileDialog.setVisible(true);
 
-                // Get the selected directory and file name
-                String directory = fileDialog.getDirectory();
-                String fileName = fileDialog.getFile();
+                // get directory and file name
+                GUI.directory = fileDialog.getDirectory();
+                GUI.fileName = fileDialog.getFile();
 
                 // If a file was selected
                 if (fileName != null) {
                     // Process the selected file
                     System.out.println("Selected file: " + directory + fileName);
 
-
             }}
         });
 
+            // RUN BUTTON
         runButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                switch(selectedOption) {
+                switch(GUI.selectedOption) {
                     case "Sequential":
-                        seq.test();
+                        seq.test(fileName, directory);
                         break;
                     case "Parallel":
-                        par.Unimplemented();
+                        par.test(fileName, directory);
                         break;
                     case "Distributed":
-                        distr.Unimplemented();
+                        distr.test(fileName, directory);
                         break;
                     default:
                         System.out.println("Run mode not selected.");
@@ -134,34 +138,31 @@ public class GUI implements ActionListener {
 
 
 
-//      ───────────────────────────────────────────────────────────────────┘
+//      ─────────────────────────────────────────────────────────────────────────────────────┘
+
+        //  IMAGE PREVIEW ─────────────────────────────────────────────┐
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("cat2.jpeg"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        JLabel imagePreview = new JLabel(new ImageIcon(image));
+//      ───────────────────────────────────────────────────────────────┘
 
 //      ───Panel shenanigans 😒──────────────────────────────────┐
 
         panel1.add(p1, BorderLayout.NORTH);
         panel1.add(customKernel, BorderLayout.SOUTH);
 
-        panel2.add(selectImage, BorderLayout.SOUTH);
         panel2.add(p2, BorderLayout.NORTH);
+        panel2.add(selectImage, BorderLayout.SOUTH);
         panel2.add(imagePreview, BorderLayout.SOUTH);
 
         panel3.add(p3, BorderLayout.NORTH);
         panel3.add(runMode, BorderLayout.WEST);
         panel3.add(runButton, BorderLayout.EAST);
 
-
-        //frame.setLayout(new GridLayout(2,1));
-
-        /*GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.NORTH;
-        panel1.add(info, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        panel1.add(customKernel, constraints);
-*/
 
         frame.add(panel1, BorderLayout.WEST);
         frame.add(panel2, BorderLayout.EAST);

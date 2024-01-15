@@ -1,9 +1,16 @@
 public class SeqKerneling {
 
-    public void test(){
 
-        System.out.println("test");
+
+
+
+    public void test(String fileName, String directory){
+
+
+        System.out.println(directory + fileName);
+
 
     }
+
 
 }
