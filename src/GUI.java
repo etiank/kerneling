@@ -1,5 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,9 +35,13 @@ public class GUI implements ActionListener {
     DistrKerneling distr = new DistrKerneling();
     SeqKerneling seq = new SeqKerneling();
     private static String selectedOption = "";
+    private static String selectedKernel = "";
+
     static String directory = "\\kerneling\\";
     static String fileName = "cat2.jpeg";
     static int[][] kernel;
+    static boolean enableTable = true;
+
 
     public GUI(){ // creating the very elegant sqaure of gaze
 
@@ -76,13 +82,42 @@ public class GUI implements ActionListener {
         JButton selectImage = new JButton("Select image");
         JButton runButton = new JButton("Run");
 
-        // DROPDOWN MENU
+            // DROPDOWN MENU MODE
         JComboBox<String> runMode = new JComboBox<>(
                 new String[]{" ","Sequential", "Parallel", "Distributed"});
         runMode.addActionListener((e) -> {
             GUI.selectedOption = (String) runMode.getSelectedItem();
             System.out.println("Selected option: " + selectedOption);
         });
+
+        DefaultTableModel tableModel = new DefaultTableModel(3, 3);
+        JTable matrixTable = new JTable(tableModel);
+
+        // DROPDOWN MENU KERNEL
+        JComboBox<String> kernelMode = new JComboBox<>(
+                new String[]{"Custom","Sharpen", "Box blur", "Gaussian blur", "Edge detection"});
+        kernelMode.addActionListener((e) -> {
+            GUI.selectedKernel = (String) kernelMode.getSelectedItem();
+            if (GUI.selectedKernel == "Custom"){GUI.enableTable = true;} else {GUI.enableTable = false;}
+            matrixTable.setEnabled(enableTable);
+            System.out.println("Selected kernel: " + selectedKernel);
+        });
+
+        // JTable for custom kernel
+
+        runButton.addActionListener(e -> {
+            // Retrieve matrix elements from JTable
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    Object value = matrixTable.getValueAt(i, j);
+                    System.out.print(value + " ");
+                }
+            }
+        });
+
+
+
+
 //      ────────────────────────────────────────────────────────────────────┘
 
 
@@ -150,6 +185,8 @@ public class GUI implements ActionListener {
 
         panel1.add(p1, BorderLayout.NORTH);
         panel1.add(customKernel, BorderLayout.SOUTH);
+        panel1.add(kernelMode, BorderLayout.WEST);
+        panel1.add(matrixTable,BorderLayout.WEST);
 
         panel2.add(p2, BorderLayout.NORTH);
         panel2.add(selectImage, BorderLayout.SOUTH);
