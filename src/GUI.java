@@ -15,14 +15,9 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 /// Program by EtianKrižman 89201173 2023/24 ® ─ │ └ ┘ ┌ ┐
 // forgive me for I wanted to make this code more readable to my silly ass by adding <br/>
 
-
-
 /*
 ┌────────────────────────────TO-DO──────────────────────────────────────────────┐
 │ - una class per la window (GUI)                                               │
-│ - una class per il programma sequential                                       │
-│ - una class per il programma parallel                                         │
-│ - una class per il programma distributed                                      │
 │ - start actually working on convolution algorithm                             │
 │ - implement image preview                                                     │
 └────────────────────────────TO-DO──────────────────────────────────────────────┘
@@ -40,6 +35,7 @@ public class GUI implements ActionListener {
     private static String selectedOption = "";
     static String directory = "\\kerneling\\";
     static String fileName = "cat2.jpeg";
+    static int[][] kernel;
 
     public GUI(){ // creating the very elegant sqaure of gaze
 
@@ -119,13 +115,13 @@ public class GUI implements ActionListener {
 
                 switch(GUI.selectedOption) {
                     case "Sequential":
-                        seq.test(fileName, directory);
+                        seq.test(fileName, directory, kernel);
                         break;
                     case "Parallel":
-                        par.test(fileName, directory);
+                        par.test(fileName, directory, kernel);
                         break;
                     case "Distributed":
-                        distr.test(fileName, directory);
+                        distr.test(fileName, directory, kernel);
                         break;
                     default:
                         System.out.println("Run mode not selected.");
