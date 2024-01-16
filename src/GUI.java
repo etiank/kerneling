@@ -63,16 +63,12 @@ public class GUI implements ActionListener {
 //      ─────────────────────────JPannelli──────────────────────────────────────────────────┐
         //GridBAgLayout
         JPanel panel1 = new JPanel();
-        //panel1.setSize(350,250);
         JPanel panel2 = new JPanel();
-        //panel2.setSize(350,250);
         JPanel panel3 = new JPanel();
-        //panel3.setSize(700,50);
         JLabel p1 = new JLabel("Select kernel: ");
         JLabel p2 = new JLabel("Select image: ");
         JLabel p3 = new JLabel("Select run mode: ");
-        //panel1.setSize(400, 300);
-        //panel1.setBorder(createEmptyBorder(30, 30, 10, 30));
+
 
 //      ────────────────────────────────────────────────────────────────────────────────────┘
 
@@ -106,12 +102,14 @@ public class GUI implements ActionListener {
         // JTable for custom kernel
 
         runButton.addActionListener(e -> {
-            // Retrieve matrix elements from JTable
+            // test
+            System.out.println("Custom kernel:");
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     Object value = matrixTable.getValueAt(i, j);
                     System.out.print(value + " ");
                 }
+                System.out.println();
             }
         });
 
@@ -148,6 +146,52 @@ public class GUI implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                switch (GUI.selectedKernel){
+                    case "Custom":
+                        //kernel = ;
+                        break;
+                    case "Sharpen":
+                        GUI.kernel = new int[][] {
+                                { 0, -1, 0},
+                                {-1, 5, -1},
+                                {0, -1, 0}
+                        };
+                        break;
+                    case "Box blur":
+                        GUI.kernel = new int[][] {
+                                {1,1,1},
+                                {1,1,1},
+                                {1,1,1}
+                        };
+                        break;
+                    case "Gaussian blur":
+                        GUI.kernel = new int[][] {
+                                {1, 2, 1},
+                                {2, 4, 2},
+                                {1, 2, 1}
+                        };
+                        break;
+                    case "Edge detection":
+                        GUI.kernel = new int[][] {
+                                {-1, -1, -1},
+                                {-1, 8, -1},
+                                {-1, -1, -1}
+                        };
+                        break;
+
+                    default:
+                        System.out.println("Achievement unlocked: How did we get here?");
+                }
+
+                for (int i = 0; i < kernel.length; i++) {
+                    for (int ii = 0; ii < kernel.length; ii++) {
+                        matrixTable.setValueAt(kernel[i][ii], i, ii);
+
+                    }
+                }
+
+
+
                 switch(GUI.selectedOption) {
                     case "Sequential":
                         seq.test(fileName, directory, kernel);
@@ -162,9 +206,15 @@ public class GUI implements ActionListener {
                         System.out.println("Run mode not selected.");
                 }
 
+                // SELECT KERNEL
+
+
 
             }
         });
+
+
+
 
 
 
