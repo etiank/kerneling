@@ -54,8 +54,8 @@ public class GUI implements ActionListener {
                         └──────────────────────────────────┘
                         > You may select an image and a\s
                         kernel to be used, if not,\s
-                        default values will be used.
-                        """);
+                        identity kernel will be used.
+                """);
 
 //      ───adding some silliness───────────────────────────────────────┐
         // le magestic, le one and only, J. Frame Kernely
@@ -96,7 +96,7 @@ public class GUI implements ActionListener {
 
         // DROPDOWN MENU KERNEL
         JComboBox<String> kernelMode = new JComboBox<>(
-                new String[]{"Custom","Sharpen", "Box blur", "Gaussian blur", "Edge detection"});
+                new String[]{" ", "Custom","Sharpen", "Box blur", "Gaussian blur", "Edge detection"});
         kernelMode.addActionListener((e) -> {
             GUI.selectedKernel = (String) kernelMode.getSelectedItem();
             if (GUI.selectedKernel != "Custom"){GUI.enableTable = false;} else {GUI.enableTable = true;}
@@ -112,7 +112,7 @@ public class GUI implements ActionListener {
 
         runButton.addActionListener(e -> {
             // test
-            System.out.println("Custom kernel:");
+            System.out.println("Selected kernel:");
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     Object value = matrixTable.getValueAt(i, j);
