@@ -1,3 +1,5 @@
+// using MPI - 9mpj express
+
 public class DistrKerneling {
 
     public void test(String fileName, String directory, int[][] kernel){

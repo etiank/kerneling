@@ -1,28 +1,26 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.BrokenBarrierException;
-
-import static javax.swing.BorderFactory.createEmptyBorder;
-
 //  ─────────────────────────────────────────────────────────┘
+
 /// Program by EtianKrižman 89201173 2023/24 ® ─ │ └ ┘ ┌ ┐
-// forgive me for I wanted to make this code more readable to my silly ass by adding <br/>
+// forgive me for I wanted to make this code more readable to my silly brain by adding <br/>
 
 /*
-┌────────────────────────────TO-DO──────────────────────────────────────────────┐
-│ - una class per la window (GUI)                                               │
-│ - start actually working on convolution algorithm                             │
-│ - implement image preview                                                     │
-└────────────────────────────TO-DO──────────────────────────────────────────────┘
+┌────────────────────────────TO-DO───────────────────────────┐
+│ - start actually working on convolution algorithm          │
+│ - implement image preview                                  │
+│ - rebuild the UI with GridLayout                           │
+│ - make JTable thinner                                      │
+│ - add more sample pics (not cats)                          │
+-  report graphs: R studio, https://r-graph-gallery.com/ , ggplot2
+└────────────────────────────TO-DO───────────────────────────┘
 */
 
 
@@ -39,40 +37,46 @@ public class GUI implements ActionListener {
 
     static String directory = "\\kerneling\\";
     static String fileName = "cat2.jpeg";
-    static int[][] kernel;
-    static boolean enableTable = true;
+    static int[][] kernel =  new int[][] { // DEFAULT KERNEL IS IDENTITY
+        {0, 0, 0},
+        {0, 1, 0},
+        {0, 0, 0}
+    };
+    static boolean enableTable = false;
 
 
     public GUI(){ // creating the very elegant sqaure of gaze
 
-        System.out.println("┌──────────────────────────────────┐\n" +
-                "│ Kernel image processing program. │\n" +
-                "└──────────────────────────────────┘\n" +
-                "> You may select an image and a \n" +
-                "kernel to be used, if not, \n" +
-                "default values will be used.\n");
+        System.out.println(
+                """
+                        ┌──────────────────────────────────┐
+                        │ Kernel image processing program. │
+                        └──────────────────────────────────┘
+                        > You may select an image and a\s
+                        kernel to be used, if not,\s
+                        default values will be used.
+                        """);
 
 //      ───adding some silliness───────────────────────────────────────┐
         // le magestic, le one and only, J. Frame Kernely
         JFrame frame = new JFrame("Image process kerneling 🌽");
         ImageIcon icon = new ImageIcon("cat2.jpeg");
         frame.setIconImage(icon.getImage());
-        frame.setSize(700, 300);
+        frame.setSize(1000, 300);
 //      ───────────────────────────────────────────────────────────────┘
 
 //      ─────────────────────────JPannelli──────────────────────────────────────────────────┐
-        //GridBAgLayout
+        //GridBagLayout <- ??
+        // Frame is
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
         JPanel panel3 = new JPanel();
         JLabel p1 = new JLabel("Select kernel: ");
         JLabel p2 = new JLabel("Select image: ");
         JLabel p3 = new JLabel("Select run mode: ");
-
-
 //      ────────────────────────────────────────────────────────────────────────────────────┘
 
-//      ───────────────────🔘───────────────────────────────────────────────┐
+//      ───────────────────🔘───────────────────────────────────────────────────────────────────────────┐
 
         JButton customKernel = new JButton("Select ");
         JButton selectImage = new JButton("Select image");
@@ -86,6 +90,7 @@ public class GUI implements ActionListener {
             System.out.println("Selected option: " + selectedOption);
         });
 
+        // JTable
         DefaultTableModel tableModel = new DefaultTableModel(3, 3);
         JTable matrixTable = new JTable(tableModel);
 
@@ -94,12 +99,16 @@ public class GUI implements ActionListener {
                 new String[]{"Custom","Sharpen", "Box blur", "Gaussian blur", "Edge detection"});
         kernelMode.addActionListener((e) -> {
             GUI.selectedKernel = (String) kernelMode.getSelectedItem();
-            if (GUI.selectedKernel == "Custom"){GUI.enableTable = true;} else {GUI.enableTable = false;}
+            if (GUI.selectedKernel != "Custom"){GUI.enableTable = false;} else {GUI.enableTable = true;}
             matrixTable.setEnabled(enableTable);
+
             System.out.println("Selected kernel: " + selectedKernel);
         });
+//      ────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-        // JTable for custom kernel
+
+//      ──────────────────────────────────────────────────────────┐
+        // JTable TEST
 
         runButton.addActionListener(e -> {
             // test
@@ -112,16 +121,12 @@ public class GUI implements ActionListener {
                 System.out.println();
             }
         });
+//      ──────────────────────────────────────────────────────────┘
 
 
+// BUTTON ACTIONLISTENERS
 
-
-//      ────────────────────────────────────────────────────────────────────┘
-
-
-        // BUTTON ACTIONLISTENERS ───────────────────────────────────────────────────────────┐
-
-            // IMAGE SELECTOR
+            // IMAGE SELECTOR ───────────────────────────────────────────────────────────────────┐
 
         selectImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -140,21 +145,30 @@ public class GUI implements ActionListener {
 
             }}
         });
+// ───────────────────────────────────────────────────────────────────┐
 
             // RUN BUTTON
         runButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                    // SELECT KERNEL
                 switch (GUI.selectedKernel){
                     case "Custom":
-                        //kernel = ;
+
+                        for (int i = 0; i < 3; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                Object value = matrixTable.getValueAt(i,j);
+                                GUI.kernel[i][j] = Integer.parseInt(value.toString());
+                            }
+                        }
+
                         break;
                     case "Sharpen":
                         GUI.kernel = new int[][] {
                                 { 0, -1, 0},
                                 {-1, 5, -1},
-                                {0, -1, 0}
+                                { 0, -1, 0}
                         };
                         break;
                     case "Box blur":
@@ -174,22 +188,23 @@ public class GUI implements ActionListener {
                     case "Edge detection":
                         GUI.kernel = new int[][] {
                                 {-1, -1, -1},
-                                {-1, 8, -1},
+                                {-1,  8, -1},
                                 {-1, -1, -1}
                         };
                         break;
-
                     default:
-                        System.out.println("Achievement unlocked: How did we get here?");
+                        System.out.println("Kernel not selected.");
                 }
 
+                    // Setting the value of the JTable withhhh the
+                    // values of the selected kernel - if default was not used
+                    // such that is not empty and is prettier
                 for (int i = 0; i < kernel.length; i++) {
                     for (int ii = 0; ii < kernel.length; ii++) {
                         matrixTable.setValueAt(kernel[i][ii], i, ii);
 
                     }
                 }
-
 
 
                 switch(GUI.selectedOption) {
@@ -206,23 +221,13 @@ public class GUI implements ActionListener {
                         System.out.println("Run mode not selected.");
                 }
 
-                // SELECT KERNEL
-
-
-
             }
         });
+//      ───────────────────────────────────────────────────────────────────────────────────────────────┘
 
-
-
-
-
-
-
-//      ─────────────────────────────────────────────────────────────────────────────────────┘
 
         //  IMAGE PREVIEW ─────────────────────────────────────────────┐
-        BufferedImage image = null;
+        BufferedImage image;
         try {
             image = ImageIO.read(new File("cat2.jpeg"));
         } catch (IOException e) {
@@ -230,6 +235,7 @@ public class GUI implements ActionListener {
         }
         JLabel imagePreview = new JLabel(new ImageIcon(image));
 //      ───────────────────────────────────────────────────────────────┘
+
 
 //      ───Panel shenanigans 😒──────────────────────────────────┐
 
@@ -252,7 +258,7 @@ public class GUI implements ActionListener {
         frame.add(panel3, BorderLayout.SOUTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.pack();
-        frame.setLocation(400,260);
+        frame.setLocation(280,260);
         frame.setVisible(true);
         UIManager.put("swing.boldMetal", Boolean.FALSE);
 //      ─────────────────────────────────────────────────────────┘
