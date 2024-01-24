@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,6 +35,11 @@ public class SeqKerneling {
                     int red = Math.min(255, Math.max(0, sumRed));
                     int green = Math.min(255, Math.max(0, sumGreen));
                     int blue = Math.min(255, Math.max(0, sumBlue));
+
+                    red = (int) (255.0 * red / 255.0);
+                    red = (int) (255.0 * red / 255.0);
+                    blue = (int) (255.0 * red / 255.0);
+
                     int rgb = new Color(red, green, blue).getRGB();
                     resultImage.setRGB(x, y, rgb);
                 }
@@ -46,9 +52,21 @@ public class SeqKerneling {
         }
 
 
+        openImage();
+
     }
 
+        //OPEN A NEW WINDOW WITH THE GENERATED IMAGE
+    public void openImage(){
+        JFrame frame = new JFrame("Output image");
+        ImageIcon icon = new ImageIcon("cat2.jpeg");
+        frame.setIconImage(icon.getImage());
+        frame.setSize(300, 300);
 
+
+        frame.setLocation(450,300);
+        frame.setVisible(true);
+    }
 
 
 

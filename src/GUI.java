@@ -14,11 +14,13 @@ import java.io.IOException;
 
 /*
 ┌────────────────────────────TO-DO───────────────────────────┐
-│ - start actually working on convolution algorithm          │
+│ - count execution time                                     │
+│ - add more sample pictures                                 │
 │ - implement image preview                                  │
+│ - window with output image                                 │
 │ - rebuild the UI with GridLayout                           │
-│ - make JTable thinner                                      │
-│ - add more sample pics (not cats)                          │
+│ - iron out bugs                                            │
+│ - make JTable thinner (possible?)                          │
 -  report graphs: R studio, https://r-graph-gallery.com/ , ggplot2
 └────────────────────────────TO-DO───────────────────────────┘
 */
