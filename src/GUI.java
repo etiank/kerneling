@@ -217,13 +217,13 @@ public class GUI implements ActionListener {
 
                 switch(GUI.selectedOption) {
                     case "Sequential":
-                        seq.test(fileName, directory, kernel);
+                        seq.kerneling(fileName, directory, kernel);
                         break;
                     case "Parallel":
-                        par.test(fileName, directory, kernel);
+                        par.kerneling(fileName, directory, kernel);
                         break;
                     case "Distributed":
-                        distr.test(fileName, directory, kernel);
+                        distr.kerneling(fileName, directory, kernel);
                         break;
                     default:
                         System.out.println("Run mode not selected.");
