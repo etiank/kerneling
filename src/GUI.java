@@ -37,7 +37,7 @@ public class GUI implements ActionListener {
 
     static String directory = "\\kerneling\\";
     static String fileName = "cat2.jpeg";
-    static int[][] kernel =  new int[][] { // DEFAULT KERNEL IS IDENTITY
+    static float[][] kernel =  new float[][] { // DEFAULT KERNEL IS IDENTITY
         {0, 0, 0},
         {0, 1, 0},
         {0, 0, 0}
@@ -165,28 +165,36 @@ public class GUI implements ActionListener {
 
                         break;
                     case "Sharpen":
-                        GUI.kernel = new int[][] {
+                        GUI.kernel = new float[][] {
                                 { 0, -1, 0},
                                 {-1, 5, -1},
                                 { 0, -1, 0}
                         };
                         break;
                     case "Box blur":
-                        GUI.kernel = new int[][] {
+                        GUI.kernel = new float[][] {
                                 {1,1,1},
                                 {1,1,1},
                                 {1,1,1}
                         };
+                        for (int i = 0; i < GUI.kernel.length; i++) {
+                            for (int j = 0; j < GUI.kernel[i].length; j++) GUI.kernel[i][j] = GUI.kernel[i][j] * (float)(1.0/9);
+                        }
+
                         break;
                     case "Gaussian blur":
-                        GUI.kernel = new int[][] {
+                        GUI.kernel = new float[][] {
                                 {1, 2, 1},
                                 {2, 4, 2},
                                 {1, 2, 1}
                         };
+                        for (int i = 0; i < GUI.kernel.length; i++) {
+                            for (int j = 0; j < GUI.kernel[i].length; j++) GUI.kernel[i][j] = GUI.kernel[i][j] * (float)(1.0/16);
+                        }
+
                         break;
                     case "Edge detection":
-                        GUI.kernel = new int[][] {
+                        GUI.kernel = new float[][] {
                                 {-1, -1, -1},
                                 {-1,  8, -1},
                                 {-1, -1, -1}
