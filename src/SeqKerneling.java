@@ -8,8 +8,12 @@ import java.nio.Buffer;
 
 public class SeqKerneling {
 
+
     // the almighty convolution algorithm
     public void kerneling(String fileName, String directory, float[][] kernel){
+
+        long t0 = System.currentTimeMillis();
+        long t;
 
         try {
             BufferedImage image = ImageIO.read(new File(directory, fileName));
@@ -51,7 +55,8 @@ public class SeqKerneling {
             throw new RuntimeException(e);
         }
 
-
+        t = System.currentTimeMillis() - t0;
+        System.out.println("The convolution process took " + t + "ms");
         openImage();
 
     }
@@ -61,9 +66,19 @@ public class SeqKerneling {
         JFrame frame = new JFrame("Output image");
         ImageIcon icon = new ImageIcon("cat2.jpeg");
         frame.setIconImage(icon.getImage());
-        frame.setSize(300, 300);
+        frame.setSize(500, 500);
 
+        BufferedImage displayOutput;
+        try {
+            displayOutput = ImageIO.read(new File("output.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        JLabel outputPreview = new JLabel(new ImageIcon(displayOutput));
 
+        JScrollPane scroll = new JScrollPane(new JLabel(new ImageIcon(displayOutput)));
+        scroll.add(outputPreview);
+        frame.add(scroll);
         frame.setLocation(450,300);
         frame.setVisible(true);
     }

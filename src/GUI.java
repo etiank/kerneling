@@ -16,6 +16,7 @@ import java.io.IOException;
 ┌────────────────────────────TO-DO───────────────────────────┐
 │ - count execution time                                     │
 │ - add more sample pictures                                 │
+│ - limit selectable file type                               │
 │ - implement image preview                                  │
 │ - window with output image                                 │
 │ - rebuild the UI with GridLayout                           │
@@ -161,7 +162,7 @@ public class GUI implements ActionListener {
                         for (int i = 0; i < 3; i++) {
                             for (int j = 0; j < 3; j++) {
                                 Object value = matrixTable.getValueAt(i,j);
-                                GUI.kernel[i][j] = Integer.parseInt(value.toString());
+                                GUI.kernel[i][j] = Float.parseFloat(value.toString());
                             }
                         }
 
