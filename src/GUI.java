@@ -14,14 +14,8 @@ import java.io.IOException;
 
 /*
 ┌────────────────────────────TO-DO───────────────────────────┐
-│ - count execution time                                     │
-│ - add more sample pictures                                 │
 │ - limit selectable file type                               │
-│ - implement image preview                                  │
-│ - window with output image                                 │
-│ - rebuild the UI with GridLayout                           │
 │ - iron out bugs                                            │
-│ - make JTable thinner (possible?)                          │
 -  report graphs: R studio, https://r-graph-gallery.com/ , ggplot2
 └────────────────────────────TO-DO───────────────────────────┘
 */
@@ -38,8 +32,8 @@ public class GUI implements ActionListener {
     private static String selectedOption = "";
     private static String selectedKernel = "";
 
-    static String directory = "\\kerneling\\";
-    static String fileName = "cat2.jpeg";
+    static String directory = "";
+    static String fileName = "";
     static float[][] kernel =  new float[][] { // DEFAULT KERNEL IS IDENTITY
         {0, 0, 0},
         {0, 1, 0},
@@ -65,15 +59,19 @@ public class GUI implements ActionListener {
         JFrame frame = new JFrame("Image process kerneling 🌽");
         ImageIcon icon = new ImageIcon("cat2.jpeg");
         frame.setIconImage(icon.getImage());
-        frame.setSize(1000, 300);
+        frame.setSize(500, 200);
 //      ───────────────────────────────────────────────────────────────┘
 
 //      ─────────────────────────JPannelli──────────────────────────────────────────────────┐
         //GridBagLayout <- ??
         // Frame is
-        JPanel panel1 = new JPanel();
-        JPanel panel2 = new JPanel();
+        JPanel panel1 = new JPanel(new FlowLayout());
+        JPanel panel2 = new JPanel(new FlowLayout());
         JPanel panel3 = new JPanel();
+        JPanel panelFor12 = new JPanel();
+        panel1.setPreferredSize(new Dimension(120,120));
+        panelFor12.add(panel1, BorderLayout.WEST);
+        panelFor12.add(panel2, BorderLayout.EAST);
         JLabel p1 = new JLabel("Select kernel: ");
         JLabel p2 = new JLabel("Select image: ");
         JLabel p3 = new JLabel("Select run mode: ");
@@ -81,7 +79,7 @@ public class GUI implements ActionListener {
 
 //      ───────────────────🔘───────────────────────────────────────────────────────────────────────────┐
 
-        JButton customKernel = new JButton("Select ");
+        //JButton customKernel = new JButton("Select ");
         JButton selectImage = new JButton("Select image");
         JButton runButton = new JButton("Run");
 
@@ -96,6 +94,9 @@ public class GUI implements ActionListener {
         // JTable
         DefaultTableModel tableModel = new DefaultTableModel(3, 3);
         JTable matrixTable = new JTable(tableModel);
+        matrixTable.getColumnModel().getColumn(0).setPreferredWidth(30); // ID column
+        matrixTable.getColumnModel().getColumn(1).setPreferredWidth(30); // First Name column
+        matrixTable.getColumnModel().getColumn(2).setPreferredWidth(30);
 
         // DROPDOWN MENU KERNEL
         JComboBox<String> kernelMode = new JComboBox<>(
@@ -134,7 +135,6 @@ public class GUI implements ActionListener {
         selectImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image");
-
                 fileDialog.setVisible(true);
 
                 // get directory and file name
@@ -142,9 +142,10 @@ public class GUI implements ActionListener {
                 GUI.fileName = fileDialog.getFile();
 
                 // If a file was selected
-                if (fileName != null) {
+                if (GUI.fileName != null) {
                     // Process the selected file
-                    System.out.println("Selected file: " + directory + fileName);
+                    System.out.println("Selected file: " + GUI.directory + GUI.fileName);
+
 
             }}
         });
@@ -155,7 +156,9 @@ public class GUI implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                    // SELECT KERNEL
+
+
+                // SELECT KERNEL
                 switch (GUI.selectedKernel){
                     case "Custom":
 
@@ -204,7 +207,7 @@ public class GUI implements ActionListener {
                         };
                         break;
                     default:
-                        System.out.println("Kernel not selected.");
+                        System.out.println("Kernel not specified. Identity kernal will be used.");
                 }
 
                     // Setting the value of the JTable withhhh the
@@ -238,34 +241,33 @@ public class GUI implements ActionListener {
 
 
         //  IMAGE PREVIEW ─────────────────────────────────────────────┐
-        BufferedImage image;
+       /* BufferedImage image;
         try {
-            image = ImageIO.read(new File("cat2.jpeg"));
+            image = ImageIO.read(new File(directory+ fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        JLabel imagePreview = new JLabel(new ImageIcon(image));
+        JLabel imagePreview = new JLabel(new ImageIcon(image));*/
 //      ───────────────────────────────────────────────────────────────┘
 
 
 //      ───Panel shenanigans 😒──────────────────────────────────┐
 
-        panel1.add(p1, BorderLayout.NORTH);
-        panel1.add(customKernel, BorderLayout.SOUTH);
-        panel1.add(kernelMode, BorderLayout.WEST);
-        panel1.add(matrixTable,BorderLayout.WEST);
-
-        panel2.add(p2, BorderLayout.NORTH);
+        panel1.add(p1);
+        //panel1.add(customKernel, BorderLayout.SOUTH);
+        panel1.add(kernelMode);
+        panel1.add(matrixTable);
+        panel2.add(p2);
         panel2.add(selectImage, BorderLayout.SOUTH);
-        panel2.add(imagePreview, BorderLayout.SOUTH);
+
+        //panel2.add(imagePreview, BorderLayout.SOUTH);
 
         panel3.add(p3, BorderLayout.NORTH);
         panel3.add(runMode, BorderLayout.WEST);
         panel3.add(runButton, BorderLayout.EAST);
 
 
-        frame.add(panel1, BorderLayout.WEST);
-        frame.add(panel2, BorderLayout.EAST);
+        frame.add(panelFor12, BorderLayout.CENTER);
         frame.add(panel3, BorderLayout.SOUTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.pack();

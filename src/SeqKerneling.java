@@ -15,8 +15,11 @@ public class SeqKerneling {
         long t0 = System.currentTimeMillis();
         long t;
 
+            //TRBLSHT
+        System.out.println("File Path: " + directory + fileName);
+
         try {
-            BufferedImage image = ImageIO.read(new File(directory, fileName));
+            BufferedImage image = ImageIO.read(new File(directory + fileName));
             int width = image.getWidth();
             int height = image.getHeight();
             BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -41,8 +44,8 @@ public class SeqKerneling {
                     int blue = Math.min(255, Math.max(0, sumBlue));
 
                     red = (int) (255.0 * red / 255.0);
-                    red = (int) (255.0 * red / 255.0);
-                    blue = (int) (255.0 * red / 255.0);
+                    green = (int) (255.0 * green / 255.0);
+                    blue = (int) (255.0 * blue / 255.0);
 
                     int rgb = new Color(red, green, blue).getRGB();
                     resultImage.setRGB(x, y, rgb);
@@ -78,12 +81,9 @@ public class SeqKerneling {
 
         JScrollPane scroll = new JScrollPane(new JLabel(new ImageIcon(displayOutput)));
         scroll.add(outputPreview);
+
         frame.add(scroll);
         frame.setLocation(450,300);
         frame.setVisible(true);
     }
-
-
-
-
 }
