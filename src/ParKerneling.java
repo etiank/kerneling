@@ -33,31 +33,23 @@ public class ParKerneling {
         }
 
         t = System.currentTimeMillis() - t0;
-        System.out.println("The convolution process took " + t + "ms");
+        System.out.println("The convolution process in PARALLEL took " + t + "ms");
         openImage();
 
     }
 
     public void openImage(){
-        JFrame frame = new JFrame("Output image");
-        ImageIcon icon = new ImageIcon("cat2.jpeg");
-        frame.setIconImage(icon.getImage());
-        frame.setSize(500, 500);
-
-        BufferedImage displayOutput;
-        try {
-            displayOutput = ImageIO.read(new File("output.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        File outputFile = new File("output.png");
+        if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+            if (outputFile.exists()) {
+                try {
+                    desktop.open(outputFile);
+                } catch (IOException e) {
+                    throw new RuntimeException("Opening the output image resulted in an error :/", e);
+                }
+            }
         }
-        JLabel outputPreview = new JLabel(new ImageIcon(displayOutput));
-
-        JScrollPane scroll = new JScrollPane(new JLabel(new ImageIcon(displayOutput)));
-        scroll.add(outputPreview);
-
-        frame.add(scroll);
-        frame.setLocation(450,300);
-        frame.setVisible(true);
     }
 
 
@@ -77,11 +69,12 @@ public class ParKerneling {
             this.endY = endY;
             this.startX = startX;
             this.endX = endX;
-        }
+        } // constructed
 
         @Override
         protected void compute() {
             if (endY - startY <= 4 || endX - startX <=4){   //threshold
+                // 4 is the width/height of the smallest allowed size of a subtask
                 for (int y = startY; y < endY; y++) {
                     for (int x = startX; x < endX; x++) {
 
@@ -89,7 +82,7 @@ public class ParKerneling {
                         int sumGreen = 0;
                         int sumBlue = 0;
 
-                        for (int i = -1; i <= 1; i++) {
+                        for (int i = -1; i <= 1; i++) { //convolution loops
                             for (int j = -1; j <= 1; j++) {
 
                                 int neighborX = x + j; int neighborY = y + i;
@@ -128,11 +121,11 @@ public class ParKerneling {
             } else {
                 int midY = startY + (endY - startY) / 2;
                 int midX = startX + (endX - startX) / 2;
-                invokeAll(
-                        new KernelingTask(image, resultImage, kernel, startY, midY, startX, midX),
-                        new KernelingTask(image, resultImage, kernel, startY, midY, midX, endX),
-                        new KernelingTask(image, resultImage, kernel, midY, endY, startX, midX),
-                        new KernelingTask(image, resultImage, kernel, midY, endY, midX, endX)
+                invokeAll( //recursively divides into 4 subtasks
+                        new KernelingTask(image, resultImage, kernel, startY, midY, startX, midX),  //(topleft)
+                        new KernelingTask(image, resultImage, kernel, startY, midY, midX, endX),    //(topright)
+                        new KernelingTask(image, resultImage, kernel, midY, endY, startX, midX),    //(botleft)
+                        new KernelingTask(image, resultImage, kernel, midY, endY, midX, endX)       //(botright)
                 );
             }
         }

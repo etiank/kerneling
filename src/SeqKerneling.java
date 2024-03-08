@@ -24,7 +24,7 @@ public class SeqKerneling {
             int height = image.getHeight();
             BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-            for (int y = 1; y < height - 1; y++) {
+            for (int y = 1; y < height - 1; y++) { //convolution loops
                 for (int x = 1; x < width - 1; x++) {
                     int sumRed = 0;
                     int sumGreen = 0;
@@ -59,31 +59,23 @@ public class SeqKerneling {
         }
 
         t = System.currentTimeMillis() - t0;
-        System.out.println("The convolution process took " + t + "ms");
+        System.out.println("The SEQUENTIAL convolution process took " + t + "ms");
         openImage();
 
     }
 
         //OPEN A NEW WINDOW WITH THE GENERATED IMAGE
     public void openImage(){
-        JFrame frame = new JFrame("Output image");
-        ImageIcon icon = new ImageIcon("cat2.jpeg");
-        frame.setIconImage(icon.getImage());
-        frame.setSize(500, 500);
-
-        BufferedImage displayOutput;
-        try {
-            displayOutput = ImageIO.read(new File("output.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        File outputFile = new File("output.png");
+        if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+            if (outputFile.exists()) {
+                try {
+                    desktop.open(outputFile);
+                } catch (IOException e) {
+                    throw new RuntimeException("Opening the output image resulted in an error :/", e);
+                }
+            }
         }
-        JLabel outputPreview = new JLabel(new ImageIcon(displayOutput));
-
-        JScrollPane scroll = new JScrollPane(new JLabel(new ImageIcon(displayOutput)));
-        scroll.add(outputPreview);
-
-        frame.add(scroll);
-        frame.setLocation(450,300);
-        frame.setVisible(true);
     }
 }
